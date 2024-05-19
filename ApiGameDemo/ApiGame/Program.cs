@@ -8,10 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton<IDbDataAccess, DbDataAccess>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-/*
 builder.Services.AddScoped<IDeveloperRepository, DeveloperRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
-*/
+
 
 
 builder.Services.AddControllers();
