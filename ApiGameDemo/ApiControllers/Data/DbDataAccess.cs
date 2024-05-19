@@ -40,5 +40,32 @@ namespace ApiControllers.Data
                 parameters,
                 commandType: CommandType.StoredProcedure);
         }
+
+        public async Task<IEnumerable<T>> GetDataForeignAsync<T, U, V, P>(
+            string storedProcedure,
+            P parameters,
+            Func<T, U, V, T>? map = null,
+            string connection = "default",
+            string splitOn = "Id")
+        {
+            using IDbConnection dbConnection = new SqlConnection(_configuration.GetConnectionString(connection));
+
+            if (map == null)
+            {
+                return await dbConnection.QueryAsync<T>(
+                    storedProcedure,
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+            }
+            else
+            {
+                return await dbConnection.QueryAsync<T, U, V, T>(
+                    storedProcedure,
+                    map,
+                    parameters,
+                    splitOn: splitOn,
+                    commandType: CommandType.StoredProcedure);
+            }
+        }
     }
 }

@@ -19,11 +19,26 @@ namespace ApiControllers.Repositories.Games
 
 		public async Task<IEnumerable<GameModel>> GetGamesAsync()
 		{
-			return await _dataAccess.GetDataAsync<GameModel, dynamic>(
+			/*return await _dataAccess.GetDataAsync<GameModel, dynamic>(
 				"dbo.spGame_GetAll",
 				new { }
-				);
-		}
+				);*/
+
+			var games = await _dataAccess.GetDataForeignAsync<GameModel, DeveloperModel, CategoryModel, dynamic>(
+				"dbo.spGame_GetAll",
+				new { },
+				(game, developer, category) =>
+				{
+					game.Developer = developer;
+					game.Category = category;
+					return game;
+				},
+				splitOn: "DeveloperID, CategoryID"
+                );
+
+			return games;
+
+        }
 
 		public async Task<GameModel?> GetGamesByIdAsync(int id)
 		{
@@ -47,7 +62,7 @@ namespace ApiControllers.Repositories.Games
 		{
 			await _dataAccess.SaveDataAsync(
 				"dbo.spGame_Update",
-				gameModel
+				new { gameModel.GameID, gameModel.GameName, gameModel.GameDescription, gameModel.GameReleaseDate, gameModel.GamePrice, gameModel.GameDeveloperID, gameModel.GameCategoryID }
 				);
 		}
 

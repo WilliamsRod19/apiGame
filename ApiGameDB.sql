@@ -181,7 +181,7 @@ GO
 CREATE OR ALTER PROCEDURE spGame_GetAll
 AS
 BEGIN
-    SELECT g.GameID, g.GameName, g.GameDescription, g.GameReleaseDate, g.GamePrice, d.DeveloperName, c.CategoryName
+    SELECT g.GameID, g.GameName, g.GameDescription, g.GameReleaseDate, g.GamePrice, g.GameDeveloperID,  g.GameCategoryID, d.DeveloperID, d.DeveloperName, d.DeveloperCountry, C.CategoryID, c.CategoryName
     FROM Games g
     JOIN Developers d ON g.GameDeveloperID = d.DeveloperID
     JOIN Categories c ON g.GameCategoryID = c.CategoryID
@@ -193,11 +193,9 @@ CREATE OR ALTER PROCEDURE spGame_GetById
     @GameID INT
 AS
 BEGIN
-    SELECT g.GameID, g.GameName, g.GameDescription, g.GameReleaseDate, g.GamePrice, d.DeveloperName, c.CategoryName
-    FROM Games g
-    JOIN Developers d ON g.GameDeveloperID = d.DeveloperID
-    JOIN Categories c ON g.GameCategoryID = c.CategoryID
-    WHERE g.GameID = @GameID
+    SELECT GameID, GameName, GameDescription, GameReleaseDate, GamePrice, GameDeveloperID, GameCategoryID
+    FROM Games
+    WHERE GameID = @GameID
 END
 GO
 
